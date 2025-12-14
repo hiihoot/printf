@@ -6,7 +6,7 @@
 /*   By: sait-mou <sait-mou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 16:44:54 by sait-mou          #+#    #+#             */
-/*   Updated: 2025/12/14 16:50:02 by sait-mou         ###   ########.fr       */
+/*   Updated: 2025/12/14 20:42:09 by sait-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,20 +83,26 @@ int	ft_printf(const char *f, ...)
 {
 	int		count;
 	va_list	g;
+	const char *ptr;
 
+	ptr = f;
 	count = 0;
 	va_start(g, f);
 	if (!f)
     	return (-1);
 	while (*f)
 	{
+		if( ((*ptr) == '%') && ((*(ptr + 1)) == '\0'))
+			return (-1);
         if (*f == '%')
 		{
 			f++;
+			ptr++;
 		    count += format_checker(f, g);
 		} else
 			count += write(1, f, 1);
 		f++;
+		ptr++;
 	}
 	va_end(g);
 	return (count);
