@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                       :+:      :+:    :+:   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hihoot <hihoot@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sait-mou <sait-mou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 23:30:00 by hihoot            #+#    #+#             */
-/*   Updated: 2025/12/13 23:30:00 by hihoot           ###   ########.fr       */
+/*   Created: 2025/12/14 16:44:54 by sait-mou          #+#    #+#             */
+/*   Updated: 2025/12/14 16:50:02 by sait-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	format_checker(const char *f, va_list g)
 
 	count = 0;
 	if (*f == '%')
-        count += write(1, f, 1);
+		count += write(1, f, 1);
 	else if (*f == 'c')
 		count += put_char(va_arg(g, int));
 	else if (*f == 's')
@@ -32,9 +32,9 @@ int	format_checker(const char *f, va_list g)
 	else if (*f == 'p')
 		count += put_pointer(va_arg(g, void *));
     else if (*f == 'u')
-        count += put_number(va_arg(g, unsigned int), 10);
+		count += put_number(va_arg(g, unsigned int), 10);
     else
-        put_char(*f);
+		put_char(*f);
     return (count);
 }
 
@@ -94,7 +94,7 @@ int	ft_printf(const char *f, ...)
 		{
 			f++;
 		    count += format_checker(f, g);
-		}else
+		} else
 			count += write(1, f, 1);
 		f++;
 	}
