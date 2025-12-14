@@ -1,61 +1,102 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hihoot <hihoot@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/13 23:30:00 by hihoot            #+#    #+#             */
+/*   Updated: 2025/12/13 23:30:00 by hihoot           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "ft_printf.h"
 #include <stdio.h>
-#include <stdarg.h>
-#include <unistd.h>
 
-//• %c Prints a single character.
-int put_char(int c)
+int	format_checker(const char *f, va_list g)
 {
-    return (write(1, &c, 1));
-}
-//• %s Prints a string
-int put_str(const char *s)
-{
-    int count;
+	int	count;
 
-    count = 0;
-    while (*s)
-    {
-        count += put_char(*s);
-        s++;
-    }
+	count = 0;
+	if (*f == '%')
+        count += write(1, f, 1);
+	else if (*f == 'c')
+		count += put_char(va_arg(g, int));
+	else if (*f == 's')
+		count += put_str(va_arg(g, char *));
+	else if (*f == 'd' || *f == 'i')
+		count += put_number(va_arg(g, long), 10);
+	else if (*f == 'X')
+		count += put_number_cap(va_arg(g, long), 16);
+	else if (*f == 'x')
+		count += put_number(va_arg(g, long), 16);
+	else if (*f == 'p')
+		count += put_pointer(va_arg(g, void *));
+    else if (*f == 'u')
+        count += put_number(va_arg(g, unsigned long), 10);
+    else
+        put_char(*f);
     return (count);
 }
-//• %d Prints a decimal (base 10) number.
 
-
-//• %i Prints an integer in base 10
-
-int     ft_printf(const char* f, ...)
+int	put_unit(unsigned long n, int base)
 {
-    int count;
+	int		count;
+	char	buffer[50];
+	int		i;
+	char	*b;
 
-    va_list g;
-    va_start(g, f);
-
-    count = 0;
-    while (*f)
-    {
-        if (*f == '%')
-        {
-            f++;
-            if (*f == '%')
-                count += write(1, f, 1);
-            else if (*f == 'c')
-                count += put_char(va_arg(g, int));
-            else if (*f == 's')
-                count += put_str(va_arg(g, char *));
-            
-        }
-        f++;
-    }
-
-    printf("%d\n", count);
-
-    va_end(g);
+	count = 0;
+	i = 49;
+	buffer[i] = '\0';
+	b = "0123456789abcdef";
+	if (n == 0)
+		buffer[--i] = '0';
+	while (n > 0)
+	{
+		buffer[--i] = b[n % base];
+		n /= base;
+	}
+	while (buffer[i])
+	{
+		write(1, &buffer[i], 1);
+		count++;
+		i++;
+	}
+	return (count);
 }
 
-int main()
+int	put_pointer(void *pointer)
 {
-    ft_printf("%% %c %s", 'd', "salah how are you?");
-    //printf("%% %s", "Salah how are you?");
+	unsigned long long	address;
+	int					count;
+
+	if (!pointer)
+		return (put_str("(nil)"));
+	count = 0;
+	address = (unsigned long long)pointer;
+	count += put_str("0x");
+	count += put_unit(address, 16);
+	return (count);
+}
+
+int	ft_printf(const char *f, ...)
+{
+	int		count;
+	va_list	g;
+
+	count = 0;
+	va_start(g, f);
+	while (*f)
+	{
+        if (*f == '%')
+		{
+			f++;
+		    count += format_checker(f, g);
+		}else
+			count += write(1, f, 1);
+		f++;
+	}
+	va_end(g);
+	return (count);
 }
