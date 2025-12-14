@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
 int	format_checker(const char *f, va_list g)
 {
@@ -25,15 +24,15 @@ int	format_checker(const char *f, va_list g)
 	else if (*f == 's')
 		count += put_str(va_arg(g, char *));
 	else if (*f == 'd' || *f == 'i')
-		count += put_number(va_arg(g, long), 10);
+		count += put_number(va_arg(g, int), 10);
 	else if (*f == 'X')
-		count += put_number_cap(va_arg(g, long), 16);
+		count += put_number_cap(va_arg(g, unsigned int), 16);
 	else if (*f == 'x')
-		count += put_number(va_arg(g, long), 16);
+		count += put_number(va_arg(g, unsigned int), 16);
 	else if (*f == 'p')
 		count += put_pointer(va_arg(g, void *));
     else if (*f == 'u')
-        count += put_number(va_arg(g, unsigned long), 10);
+        count += put_number(va_arg(g, unsigned int), 10);
     else
         put_char(*f);
     return (count);
@@ -87,6 +86,8 @@ int	ft_printf(const char *f, ...)
 
 	count = 0;
 	va_start(g, f);
+	if (!f)
+    	return (-1);
 	while (*f)
 	{
         if (*f == '%')

@@ -45,8 +45,9 @@ int	put_number(long n, int base)
 	b = "0123456789abcdef";
 	if (n < 0)
 	{
-		count += put_char('-');
+		put_char('-');
 		n = -n;
+		count++;
 	}
 	if (n >= base)
 		count += put_number(n / base, base);
