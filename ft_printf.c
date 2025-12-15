@@ -9,7 +9,6 @@
 /*   Updated: 2025/12/14 20:42:09 by sait-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "ft_printf.h"
 
 int	format_checker(const char *f, va_list g)
@@ -25,17 +24,17 @@ int	format_checker(const char *f, va_list g)
 		count += put_str(va_arg(g, char *));
 	else if (*f == 'd' || *f == 'i')
 		count += put_number(va_arg(g, int), 10);
-	else if (*f == 'X')
-		count += put_number_cap(va_arg(g, unsigned int), 16);
+	else if (*f == 'u')
+		count += put_number(va_arg(g, unsigned int), 10);
 	else if (*f == 'x')
 		count += put_number(va_arg(g, unsigned int), 16);
+	else if (*f == 'X')
+		count += put_number_cap(va_arg(g, unsigned int), 16);
 	else if (*f == 'p')
 		count += put_pointer(va_arg(g, void *));
-    else if (*f == 'u')
-		count += put_number(va_arg(g, unsigned int), 10);
-    else
-		put_char(*f);
-    return (count);
+	else
+		count += put_char(*f);
+	return (count);
 }
 
 int	put_unit(unsigned long n, int base)
@@ -43,17 +42,17 @@ int	put_unit(unsigned long n, int base)
 	int		count;
 	char	buffer[50];
 	int		i;
-	char	*b;
+	char	*digits;
 
 	count = 0;
 	i = 49;
 	buffer[i] = '\0';
-	b = "0123456789abcdef";
+	digits = "0123456789abcdef";
 	if (n == 0)
 		buffer[--i] = '0';
 	while (n > 0)
 	{
-		buffer[--i] = b[n % base];
+		buffer[--i] = digits[n % base];
 		n /= base;
 	}
 	while (buffer[i])
@@ -83,26 +82,26 @@ int	ft_printf(const char *f, ...)
 {
 	int		count;
 	va_list	g;
-	const char *ptr;
 
-	ptr = f;
+	if (!f)
+		return (-1);
 	count = 0;
 	va_start(g, f);
-	if (!f)
-    	return (-1);
 	while (*f)
 	{
-		if( ((*ptr) == '%') && ((*(ptr + 1)) == '\0'))
+		if (*f == '%' && *(f + 1) == '\0')
+		{
+			va_end(g);
 			return (-1);
-        if (*f == '%')
+		}
+		if (*f == '%')
 		{
 			f++;
-			ptr++;
-		    count += format_checker(f, g);
-		} else
+			count += format_checker(f, g);
+		}
+		else
 			count += write(1, f, 1);
 		f++;
-		ptr++;
 	}
 	va_end(g);
 	return (count);
