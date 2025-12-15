@@ -6,9 +6,10 @@
 /*   By: sait-mou <sait-mou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 16:44:54 by sait-mou          #+#    #+#             */
-/*   Updated: 2025/12/14 20:42:09 by sait-mou         ###   ########.fr       */
+/*   Updated: 2025/12/15 10:26:42 by sait-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "ft_printf.h"
 
 int	format_checker(const char *f, va_list g)
